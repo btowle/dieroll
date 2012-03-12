@@ -19,7 +19,7 @@ module Dieroll
           num = match[1].to_i
           sides = match[2].to_i
           rolls << roll(num, sides)
-          rolls[0] += rolls.last.first
+          rolls[0] += rolls.last.total
         elsif(match[1])
           mod = match[1]
           rolls[0] += mod.to_i
@@ -41,15 +41,13 @@ module Dieroll
     
     private
 
-    def self.roll(num, sides, mod=0)
+    def self.roll(num, sides)
       total = 0;
-      ret = [];
+      dice = [];
       num.times do
-        result = d(sides)
-        total += result
-        ret << result
+        dice << d(sides)
       end
-      ret.unshift total + mod
+      return Dieroll::Result.new(sides, dice)
     end
 
   end

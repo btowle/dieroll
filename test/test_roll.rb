@@ -16,17 +16,17 @@ class TestRoll < Test::Unit::TestCase
     roll = Dieroll::Roll.string('3d6+10')
     assert !roll.empty?
     assert_equal 2, roll.count
-    assert_equal roll.first, roll[1].first+10
+    assert_equal roll.first, roll[1].total+10
 
     roll = Dieroll::Roll.string('1d6+1d4+10')
     assert !roll.empty?
     assert_equal 3, roll.count
-    assert_equal roll.first, roll[1].first+roll[2].first+10
+    assert_equal roll.first, roll[1].total+roll[2].total+10
 
     roll = Dieroll::Roll.string('2+2d6+2+2d2+1')
     assert !roll.empty?
     assert_equal 3, roll.count
-    assert_equal roll.first, roll[1].first+roll[2].first+5
+    assert_equal roll.first, roll[1].total+roll[2].total+5
   end
   
   def test_roll_init
