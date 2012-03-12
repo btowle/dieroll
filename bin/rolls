@@ -6,4 +6,8 @@ require 'dieroll.rb'
 
 string = ARGV.shift
 
-puts Dieroll::Roll.string(string)
+if(ARGV.shift == '-a')
+  puts Dieroll::Roll.string(string)
+else
+  puts Dieroll::Roll.string(string).first
+end

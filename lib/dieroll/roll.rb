@@ -1,7 +1,8 @@
 module Dieroll
   class Roll
     attr_accessor :num, :sides, :mod
-    
+    attr_reader :results
+
     #class methods to roll 1dX and an arbitrary 'XdY+Z' string
     def self.d(sides)
       rand(1..sides)
@@ -20,20 +21,25 @@ module Dieroll
       @num = num;
       @sides = sides;
       @mod = mod;
+      @results = []
     end
 
     def roll
-      roll(@num, @sides, @mod)
+      @results << Roll.roll(@num, @sides, @mod)
+      @results.last.first
     end
     
     private
 
     def self.roll(num, sides, mod=0)
-    total = 0;
+      total = 0;
+      ret = [];
       num.times do
-        total += d(sides)
+        result = d(sides)
+        total += result
+        ret << result
       end
-      return total + mod
+      ret.unshift total + mod
     end
 
   end
