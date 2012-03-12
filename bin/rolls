@@ -6,8 +6,7 @@ require 'dieroll.rb'
 
 string = ARGV.shift
 
-if(ARGV.shift == '-results')
-  puts Dieroll::Roll.string(string)
-else
-  puts Dieroll::Roll.string(string).first
-end
+dice = Dieroll::Roll.new(string)
+
+puts dice.roll
+puts dice if ARGV.shift == '-results'

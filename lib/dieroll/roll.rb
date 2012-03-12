@@ -39,6 +39,22 @@ module Dieroll
       @results.last.first
     end
     
+    def to_s
+      ret = ""
+      ret += "Rolled #{@string} #{@results.count} times:\n"
+      i = 1
+      @results.each do |result|
+        ret += "Result #{i}:\n"
+        ret += "Total: " +result[0].to_s+"\n"
+        (result.count-1).times do |r|
+          ret += result[r+1].to_s+"\n"
+        end
+        ret +="\n"
+        i += 1
+      end
+      return ret
+    end
+
     private
 
     def self.roll(num, sides)

@@ -43,5 +43,11 @@ class TestRoll < Test::Unit::TestCase
     end
     assert_equal 5, @test.results.count
   end
-
+  
+  def test_to_s
+    assert_match "Rolled 1d6+2 0 times:\n", @test.to_s
+    @test.roll
+    @test.roll
+    assert_match /Rolled 1d6\+2 2 times:\nResult 1:\nTotal: \d+\n(\d+):1d6:\1\n\nResult 2:\nTotal: \d+\n(\d+):1d6:\2\n\n/, @test.to_s
+  end
 end
