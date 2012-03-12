@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-#driver program for testing Dieroll::Roll.string
+#driver program for Dieroll::Roll.string
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'dieroll.rb'
