@@ -1,6 +1,6 @@
 module Dieroll
   class Roll
-    attr_accessor :num, :sides, :mod
+    attr_accessor :string
     attr_reader :results
 
     #class methods to roll 1dX and an arbitrary 'XdY+Z' string
@@ -29,15 +29,13 @@ module Dieroll
     end
     
     #methods for a Roll object
-    def initialize(num=1, sides=1, mod=0)
-      @num = num;
-      @sides = sides;
-      @mod = mod;
+    def initialize(string)
+      @string = string
       @results = []
     end
 
     def roll
-      @results << Roll.roll(@num, @sides, @mod)
+      @results << Roll.string(@string)
       @results.last.first
     end
     

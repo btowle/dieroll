@@ -6,7 +6,7 @@ require 'dieroll.rb'
 class TestRoll < Test::Unit::TestCase
 
   def setup
-    @test = Dieroll::Roll.new(1,6,2)
+    @test = Dieroll::Roll.new('1d6+2')
   end
 
   def teardown
@@ -30,9 +30,7 @@ class TestRoll < Test::Unit::TestCase
   end
   
   def test_roll_init
-    assert_equal 1, @test.num
-    assert_equal 6, @test.sides
-    assert_equal 2, @test.mod
+    assert_equal '1d6+2', @test.string
     assert @test.results.empty?
   end
 
