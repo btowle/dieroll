@@ -10,8 +10,11 @@ module Dieroll
 
     def self.string(string)
       rolls = [0]
-      dice = string.split('+')
+      dice = string.split(/\+|-/)
 
+      plusminus = string.scan(%r{\+|-})
+      plusminus.unshift('+')
+      n=0
       dice.each do |str|
         match = str.match(/^(\d+)d(\d+)/)
         match = str.match(/^(\d+)$/) || match
@@ -19,11 +22,20 @@ module Dieroll
           num = match[1].to_i
           sides = match[2].to_i
           rolls << roll(num, sides)
-          rolls[0] += rolls.last.total
+          if(plusminus[n]=='-')
+            rolls[0] -= rolls.last.total
+          else
+            rolls[0] += rolls.last.total
+          end
         elsif(match[1])
           mod = match[1]
-          rolls[0] += mod.to_i
+          if(plusminus[n]=='-')
+            rolls[0] -= mod.to_i
+          else
+            rolls[0] += mod.to_i
+          end
         end
+        n+=1
       end
       return rolls
     end
