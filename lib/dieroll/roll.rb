@@ -5,15 +5,16 @@ module Dieroll
     end
 
     def self.string(string)
-      num, sides = string.match(/^(\d+)d(\d+)/).captures
+      num, sides, mod = string.match(/^(\d+)d(\d+)\+?(\d+)?/).captures
       num = num.to_i
       sides = sides.to_i
+      mod = mod.to_i
 
       total = 0
       num.times do
-        total += Roll.d(sides)
+        total += d(sides)
       end
-      return total
+      return total + mod
     end
   end
 end
