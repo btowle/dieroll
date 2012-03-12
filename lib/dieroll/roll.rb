@@ -1,7 +1,7 @@
 module Dieroll
   class Roll
     attr_accessor :string
-    attr_reader :results
+    attr_reader :results,:sets,:plusminus
 
     #class methods to roll 1dX and an arbitrary 'XdY+Z' string
     def self.d(sides)
@@ -10,32 +10,17 @@ module Dieroll
 
     def self.string(string)
       rolls = [0]
-      dice = string.split(/\+|-/)
-
-      plusminus = string.scan(%r{\+|-})
-      plusminus.unshift('+')
-      n=0
-      dice.each do |str|
-        match = str.match(/^(\d+)d(\d+)/)
-        match = str.match(/^(\d+)$/) || match
-        if(match[2])
-          num = match[1].to_i
-          sides = match[2].to_i
-          rolls << roll(num, sides)
-          if(plusminus[n]=='-')
-            rolls[0] -= rolls.last.total
-          else
-            rolls[0] += rolls.last.total
-          end
-        elsif(match[1])
-          mod = match[1]
-          if(plusminus[n]=='-')
-            rolls[0] -= mod.to_i
-          else
-            rolls[0] += mod.to_i
-          end
+      sets, plusminus = s_to_set(string)
+      sets.count.times do |i|
+        if(sets[i].count == 1)
+          val = sets[i][0]
+          rolls[0] += val if plusminus[i] == '+'
+          rolls[0] -= val if plusminus[i] == '-'
+        elsif(sets[i].count == 2)
+          rolls << roll(sets[i][0], sets[i][1])
+          rolls[0] += rolls.last.total if plusminus[i] == '+'
+          rolls[0] -= rolls.last.total if plusminus[i] == '-'
         end
-        n+=1
       end
       return rolls
     end
@@ -43,6 +28,7 @@ module Dieroll
     #methods for a Roll object
     def initialize(string)
       @string = string
+      @sets,@plusminus = Roll.s_to_set(string)
       @results = []
     end
 
@@ -76,6 +62,23 @@ module Dieroll
         dice << d(sides)
       end
       return Dieroll::Result.new(sides, dice)
+    end
+    
+    def self.s_to_set(str)
+      setstring = str.split(%r{\+|-})
+      plusminus = str.scan(%r{\+|-})
+      plusminus.unshift('+')
+      sets = []
+      setstring.each do |s|
+        m = s.match(/^(\d+)d(\d+)/)
+        m = s.match(/^(\d+)$/) || m
+        if(m[2])
+          sets << [m[1].to_i, m[2].to_i]
+        elsif(m[1])
+          sets <<  [m[1].to_i]
+        end
+      end
+      return [sets, plusminus]
     end
 
   end

@@ -7,6 +7,7 @@ class TestRoll < Test::Unit::TestCase
 
   def setup
     @test = Dieroll::Roll.new('1d6+2')
+    @twodice = Dieroll::Roll.new('1d6+1d4-2')
   end
 
   def teardown
@@ -37,6 +38,13 @@ class TestRoll < Test::Unit::TestCase
   def test_roll_init
     assert_equal '1d6+2', @test.string
     assert @test.results.empty?
+    assert_equal [[1,6],[2]], @test.sets
+    assert_equal ['+','+'], @test.plusminus
+
+    assert_equal '1d6+1d4-2', @twodice.string
+    assert @twodice.results.empty?
+    assert_equal [[1,6],[1,4],[2]], @twodice.sets
+    assert_equal ['+','+','-'], @twodice.plusminus
   end
 
   def test_obj_roll
