@@ -1,13 +1,14 @@
 module Dieroll
   class Roll
     attr_accessor :string
-    attr_reader :results,:sets,:plusminus
+    attr_reader :results, :sets, :plusminus
 
-    #class methods to roll 1dX and an arbitrary 'XdY+Z' string
+    # Roll 1dX
     def self.d(sides)
       rand(1..sides)
     end
 
+    # Roll arbitrary 'XdY+Z' string
     def self.string(string)
       rolls = [0]
       sets, plusminus = s_to_set(string)
@@ -22,46 +23,47 @@ module Dieroll
           rolls[0] -= rolls.last.total if plusminus[i] == '-'
         end
       end
-      return rolls
+      rolls
     end
     
-    #methods for a Roll object
+    # Create roll object
     def initialize(string)
       @string = string
-      @sets,@plusminus = Roll.s_to_set(string)
+      @sets, @plusminus = Roll.s_to_set(string)
       @results = []
     end
 
-    def roll
+    # Determine results of roll
+    def roll!
       @results << Roll.string(@string)
       @results.last.first
     end
-    
+
+    # Return roll result as string
     def to_s
-      ret = ""
-      ret += "Rolled #{@string} #{@results.count} times:\n"
+      ret = "Rolled #{@string} #{@results.count} times:\n"
       i = 1
       @results.each do |result|
         ret += "Result #{i}:\n"
-        ret += "Total: " +result[0].to_s+"\n"
+        ret += "Total: " + result[0].to_s + "\n"
         (result.count-1).times do |r|
-          ret += result[r+1].to_s+"\n"
+          ret += result[r + 1].to_s + "\n"
         end
-        ret +="\n"
+        ret += "\n"
         i += 1
       end
-      return ret
+      ret
     end
 
     private
 
     def self.roll(num, sides)
-      total = 0;
-      dice = [];
+      total = 0
+      dice = []
       num.times do
         dice << d(sides)
       end
-      return Dieroll::Result.new(sides, dice)
+      Dieroll::Result.new(sides, dice)
     end
     
     def self.s_to_set(str)
@@ -72,13 +74,13 @@ module Dieroll
       setstring.each do |s|
         m = s.match(/^(\d+)d(\d+)/)
         m = s.match(/^(\d+)$/) || m
-        if(m[2])
+        if(!!m[2])
           sets << [m[1].to_i, m[2].to_i]
-        elsif(m[1])
-          sets <<  [m[1].to_i]
+        elsif(!!m[1])
+          sets << [m[1].to_i]
         end
       end
-      return [sets, plusminus]
+      [sets, plusminus]
     end
 
   end
