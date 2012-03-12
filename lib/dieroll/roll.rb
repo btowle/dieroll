@@ -9,11 +9,23 @@ module Dieroll
     end
 
     def self.string(string)
-      num, sides, mod, mod = string.match(/^(\d+)d(\d+)(\+(\d+))?/).captures
-      num = num.to_i
-      sides = sides.to_i
-      mod = mod.to_i
-      roll(num, sides, mod)
+      rolls = [0]
+      dice = string.split('+')
+
+      dice.each do |str|
+        match = str.match(/^(\d+)d(\d+)/)
+        match = str.match(/^(\d+)$/) || match
+        if(match[2])
+          num = match[1].to_i
+          sides = match[2].to_i
+          rolls << roll(num, sides)
+          rolls[0] += rolls.last.first
+        elsif(match[1])
+          mod = match[1]
+          rolls[0] += mod.to_i
+        end
+      end
+      return rolls
     end
     
     #methods for a Roll object

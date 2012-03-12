@@ -12,11 +12,21 @@ class TestRoll < Test::Unit::TestCase
   def teardown
   end
 
-  def test_rolls
+  def test_class_roll
     roll = Dieroll::Roll.string('3d6+10')
     assert !roll.empty?
-    assert_equal 4, roll.count
-    assert_equal roll.first, roll[1]+roll[2]+roll[3]+10
+    assert_equal 2, roll.count
+    assert_equal roll.first, roll[1].first+10
+
+    roll = Dieroll::Roll.string('1d6+1d4+10')
+    assert !roll.empty?
+    assert_equal 3, roll.count
+    assert_equal roll.first, roll[1].first+roll[2].first+10
+
+    roll = Dieroll::Roll.string('2+2d6+2+2d2+1')
+    assert !roll.empty?
+    assert_equal 3, roll.count
+    assert_equal roll.first, roll[1].first+roll[2].first+5
   end
   
   def test_roll_init
@@ -35,4 +45,5 @@ class TestRoll < Test::Unit::TestCase
     end
     assert_equal 5, @test.results.count
   end
+
 end
