@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+#driver program for testing Dieroll::Roll.d
 
 $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'dieroll.rb'
@@ -6,4 +7,3 @@ require 'dieroll.rb'
 sides = ARGV.shift.to_i
 
 puts Dieroll::Roll.d(sides)
-
