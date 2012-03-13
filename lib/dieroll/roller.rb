@@ -98,11 +98,11 @@ module::Dieroll
 
         set_string =~ /^([+|-]?)(\d+)(d\d+)?/
         sign, num, sides = $1, $2, $3
-        sides.delete!("d")
         sign = '+'  if sign.empty?
 
         set = []
         if(!!sides)
+          sides.delete! "d"
           set = [num.to_i, sides.to_i, sign, drop_string]
         else
           set = num.to_i
