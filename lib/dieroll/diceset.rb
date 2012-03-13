@@ -1,7 +1,6 @@
 module Dieroll
   class DiceSet
-    attr_accessor :number_of_dice, :sides
-    attr_reader :last_result, :last_total, :dice, :sign
+    attr_reader :number_of_dice, :sides, :last_result, :last_total, :dice, :sign
 
     def initialize(number_of_dice, sides, sign='+')
       @number_of_dice = number_of_dice
