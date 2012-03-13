@@ -6,8 +6,8 @@ require 'dieroll.rb'
 class TestRoller < Test::Unit::TestCase
 
   def setup
-    @test = Dieroll::Roller.new('1d6+2')
-    @twodice = Dieroll::Roller.new('1d6+1d4-2')
+    @one_d6_plus_one = Dieroll::Roller.new('1d6+2')
+    @one_d6_plus_one_d4_minus_two = Dieroll::Roller.new('1d6+1d4-2')
   end
 
   def teardown
@@ -36,32 +36,37 @@ class TestRoller < Test::Unit::TestCase
   end
   
   def test_roll_init
-    assert_equal '1d6+2', @test.string
-    assert @test.results.empty?
-    assert_equal [[1,6,'+'],2], @test.sets
-    assert_equal 1, @test.dice_sets.count
-    assert_equal [2], @test.mods
-    assert_equal 1, @test.dice_sets.count
-    assert_equal 1, @test.mods.count
+    assert_equal '1d6+2', @one_d6_plus_one.string
+    assert_equal [[1,6,'+'],2], @one_d6_plus_one.sets
+    assert_equal 1, @one_d6_plus_one.dice_sets.count
+    assert_equal [2], @one_d6_plus_one.mods
+    assert_equal 1, @one_d6_plus_one.dice_sets.count
+    assert_equal 1, @one_d6_plus_one.mods.count
 
-    assert_equal '1d6+1d4-2', @twodice.string
-    assert @twodice.results.empty?
-    assert_equal [[1,6,'+'],[1,4,'+'],-2], @twodice.sets
-    assert_equal 2, @twodice.dice_sets.count
-    assert_equal 1, @test.mods.count
+    assert_equal '1d6+1d4-2', @one_d6_plus_one_d4_minus_two.string
+    assert_equal [[1,6,'+'],[1,4,'+'],-2], @one_d6_plus_one_d4_minus_two.sets
+    assert_equal 2, @one_d6_plus_one_d4_minus_two.dice_sets.count
+    assert_equal 1, @one_d6_plus_one.mods.count
   end
 
   def test_obj_roll
-    result = @test.roll!
-    assert !@test.results.empty?
-    assert_equal result, @test.total
-    @test.roll!
-    assert_equal 1, @test.results.count
+    result = @one_d6_plus_one.roll!
+    assert_equal result, @one_d6_plus_one.total
   end
   
   def test_to_s
-    @test.roll!
-    assert_match %r{1d6\+2:\n\+1d6: \d+ \n\+\d+}, @test.to_s
+    @one_d6_plus_one.roll!
+    assert_match %r{1d6\+2:\n\+1d6: \d+ \n\+\d+}, @one_d6_plus_one.to_s
+  end
+  
+  def test_string=
+    @one_d6_plus_one_d4_minus_two.string = @one_d6_plus_one.string
+    assert_equal '1d6+2', @one_d6_plus_one_d4_minus_two.string
+    assert_equal [[1,6,'+'],2], @one_d6_plus_one_d4_minus_two.sets
+    assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
+    assert_equal [2], @one_d6_plus_one_d4_minus_two.mods
+    assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
+    assert_equal 1, @one_d6_plus_one_d4_minus_two.mods.count
   end
 
 end

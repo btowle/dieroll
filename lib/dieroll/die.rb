@@ -1,7 +1,6 @@
 module Dieroll
   class Die
-    attr_accessor :sides
-    attr_reader :last_result
+    attr_reader :last_result, :sides
 
     def initialize(sides)
       @sides = sides

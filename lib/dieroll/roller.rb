@@ -1,6 +1,6 @@
 module Dieroll
   class Roller
-    attr_reader :results, :sets, :dice_sets, :mods, :total, :string
+    attr_reader :sets, :dice_sets, :mods, :total, :string
 
     # Roll 1dX
     def self.d(sides)
@@ -36,7 +36,6 @@ module Dieroll
         else
           @mods << set
         end
-        @results = []
         @total = 0
       end
     end
@@ -44,11 +43,8 @@ module Dieroll
     # Determine results of roll
     def roll!
       @total = 0
-      @results = []
       @dice_sets.each do |set|
-        roll_result = set.roll!
-        @results << roll_result
-        @total += roll_result
+        @total += set.roll!
       end
       @mods.each do |mod|
         @total += mod
@@ -68,6 +64,11 @@ module Dieroll
         output += "#{mod}\n"
       end
       output
+    end
+    
+    def string=(string)
+      @string = string
+      initialize(@string)
     end
 
     private
