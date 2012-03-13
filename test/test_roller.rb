@@ -6,7 +6,7 @@ require 'dieroll.rb'
 class TestRoller < Test::Unit::TestCase
 
   def setup
-    @one_d6_plus_one = Dieroll::Roller.new('1d6+2')
+    @one_d6_plus_one = Dieroll::Roller.new('1d6+1')
     @one_d6_plus_one_d4_minus_two = Dieroll::Roller.new('1d6+1d4-2')
   end
 
@@ -36,10 +36,10 @@ class TestRoller < Test::Unit::TestCase
   end
   
   def test_roll_init
-    assert_equal '1d6+2', @one_d6_plus_one.string
-    assert_equal [[1,6,'+',nil],2], @one_d6_plus_one.sets
+    assert_equal '1d6+1', @one_d6_plus_one.string
+    assert_equal [[1,6,'+',nil],1], @one_d6_plus_one.sets
     assert_equal 1, @one_d6_plus_one.dice_sets.count
-    assert_equal [2], @one_d6_plus_one.mods
+    assert_equal [1], @one_d6_plus_one.mods
     assert_equal 1, @one_d6_plus_one.dice_sets.count
     assert_equal 1, @one_d6_plus_one.mods.count
 
@@ -56,15 +56,15 @@ class TestRoller < Test::Unit::TestCase
   
   def test_to_s
     @one_d6_plus_one.roll!
-    assert_match %r{1d6\+2:\n\+1d6: \d+ \n\+\d+}, @one_d6_plus_one.to_s
+    assert_match %r{1d6\+1:\n\+1d6: \d+ \n\+\d+}, @one_d6_plus_one.to_s
   end
   
   def test_string=
     @one_d6_plus_one_d4_minus_two.string = @one_d6_plus_one.string
-    assert_equal '1d6+2', @one_d6_plus_one_d4_minus_two.string
-    assert_equal [[1,6,'+',nil],2], @one_d6_plus_one_d4_minus_two.sets
+    assert_equal '1d6+1', @one_d6_plus_one_d4_minus_two.string
+    assert_equal [[1,6,'+',nil],1], @one_d6_plus_one_d4_minus_two.sets
     assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
-    assert_equal [2], @one_d6_plus_one_d4_minus_two.mods
+    assert_equal [1], @one_d6_plus_one_d4_minus_two.mods
     assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
     assert_equal 1, @one_d6_plus_one_d4_minus_two.mods.count
   end
