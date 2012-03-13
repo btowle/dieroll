@@ -36,22 +36,22 @@ class TestRoller < Test::Unit::TestCase
   end
   
   def test_roll_init
-    assert_equal '1d6+1', @one_d6_plus_one.string
-    assert_equal [[1,6,'+',nil],1], @one_d6_plus_one.sets
-    assert_equal 1, @one_d6_plus_one.dice_sets.count
-    assert_equal [1], @one_d6_plus_one.mods
-    assert_equal 1, @one_d6_plus_one.dice_sets.count
-    assert_equal 1, @one_d6_plus_one.mods.count
+    assert_equal '1d6+1', @one_d6_plus_one.instance_variable_get("@string")
+    assert_equal [[1,6,'+',nil],1], @one_d6_plus_one.instance_variable_get("@sets")
+    assert_equal 1, @one_d6_plus_one.instance_variable_get("@dice_sets").count
+    assert_equal [1], @one_d6_plus_one.instance_variable_get("@mods")
+    assert_equal 1, @one_d6_plus_one.instance_variable_get("@dice_sets").count
+    assert_equal 1, @one_d6_plus_one.instance_variable_get("@mods").count
 
-    assert_equal '1d6+1d4-2', @one_d6_plus_one_d4_minus_two.string
-    assert_equal [[1,6,'+',nil],[1,4,'+',nil],-2], @one_d6_plus_one_d4_minus_two.sets
-    assert_equal 2, @one_d6_plus_one_d4_minus_two.dice_sets.count
-    assert_equal 1, @one_d6_plus_one.mods.count
+    assert_equal '1d6+1d4-2', @one_d6_plus_one_d4_minus_two.instance_variable_get("@string")
+    assert_equal [[1,6,'+',nil],[1,4,'+',nil],-2], @one_d6_plus_one_d4_minus_two.instance_variable_get("@sets")
+    assert_equal 2, @one_d6_plus_one_d4_minus_two.instance_variable_get("@dice_sets").count
+    assert_equal 1, @one_d6_plus_one.instance_variable_get("@mods").count
   end
 
   def test_obj_roll
     result = @one_d6_plus_one.roll!
-    assert_equal result, @one_d6_plus_one.total
+    assert_equal result, @one_d6_plus_one.instance_variable_get("@total")
   end
   
   def test_to_s
@@ -60,13 +60,13 @@ class TestRoller < Test::Unit::TestCase
   end
   
   def test_string=
-    @one_d6_plus_one_d4_minus_two.string = @one_d6_plus_one.string
-    assert_equal '1d6+1', @one_d6_plus_one_d4_minus_two.string
-    assert_equal [[1,6,'+',nil],1], @one_d6_plus_one_d4_minus_two.sets
-    assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
-    assert_equal [1], @one_d6_plus_one_d4_minus_two.mods
-    assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
-    assert_equal 1, @one_d6_plus_one_d4_minus_two.mods.count
+    @one_d6_plus_one_d4_minus_two.string = @one_d6_plus_one.instance_variable_get("@string")
+    assert_equal '1d6+1', @one_d6_plus_one_d4_minus_two.instance_variable_get("@string")
+    assert_equal [[1,6,'+',nil],1], @one_d6_plus_one_d4_minus_two.instance_variable_get("@sets")
+    assert_equal 1, @one_d6_plus_one_d4_minus_two.instance_variable_get("@dice_sets").count
+    assert_equal [1], @one_d6_plus_one_d4_minus_two.instance_variable_get("@mods")
+    assert_equal 1, @one_d6_plus_one_d4_minus_two.instance_variable_get("@dice_sets").count
+    assert_equal 1, @one_d6_plus_one_d4_minus_two.instance_variable_get("@mods").count
   end
 
 end

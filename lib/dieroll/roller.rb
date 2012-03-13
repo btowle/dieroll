@@ -1,6 +1,5 @@
 module::Dieroll
   class Roller
-    attr_reader :sets, :dice_sets, :mods, :total, :string
 
     # Roll 1dX
     def self.d(sides)

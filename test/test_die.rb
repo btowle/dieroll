@@ -13,13 +13,13 @@ class TestDie< Test::Unit::TestCase
   end
 
   def test_init
-    assert_equal 6, @d6.sides
-    assert_equal nil, @d6.last_result
+    assert_equal 6, @d6.instance_variable_get("@sides")
+    assert_equal nil, @d6.instance_variable_get("@last_result")
   end
 
   def test_roll
     roll_result = @d6.roll!
-    assert_equal roll_result, @d6.last_result
+    assert_equal roll_result, @d6.instance_variable_get("@last_result")
   end
 
   def test_to_s

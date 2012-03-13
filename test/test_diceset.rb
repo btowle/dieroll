@@ -15,12 +15,12 @@ class TestDiceSet< Test::Unit::TestCase
   end
 
   def test_init
-    assert_equal 1, @one_d6.number_of_dice
-    assert_equal 6, @one_d6.sides
-    assert_equal 1, @one_d6.dice.count
-    assert_equal 2, @two_d10.dice.count
-    assert @one_d6.last_result.empty?
-    assert_equal nil, @one_d6.last_total
+    assert_equal 1, @one_d6.instance_variable_get("@number_of_dice")
+    assert_equal 6, @one_d6.instance_variable_get("@sides")
+    assert_equal 1, @one_d6.instance_variable_get("@dice").count
+    assert_equal 2, @two_d10.instance_variable_get("@dice").count
+    assert @one_d6.instance_variable_get("@last_result").empty?
+    assert_equal nil, @one_d6.instance_variable_get("@last_total")
   end
 
   def test_roll
@@ -28,14 +28,21 @@ class TestDiceSet< Test::Unit::TestCase
     @two_d10.roll!
     @minus_two_d8_drop_low.roll!
 
-    assert_equal 1, @one_d6.last_result.count
-    assert_equal 2, @two_d10.last_result.count
+    assert_equal 1, @one_d6.instance_variable_get("@last_result").count
+    assert_equal 2, @two_d10.instance_variable_get("@last_result").count
 
-    assert_equal @one_d6.last_total, @one_d6.last_result.inject(0){|sum, element| sum + element}
+    assert_equal @one_d6.instance_variable_get("@last_total"),
+                  @one_d6.instance_variable_get("@last_result").
+                  inject(0){|sum, element| sum + element}
 
-    assert_equal 2, @minus_two_d8_drop_low.last_result.count
-    assert_equal 1, @minus_two_d8_drop_low.last_non_dropped.count
-    assert_equal @minus_two_d8_drop_low.last_non_dropped[0], @minus_two_d8_drop_low.last_result[1]
+    assert_equal 2, @minus_two_d8_drop_low.
+                    instance_variable_get("@last_result").count
+    assert_equal 1, @minus_two_d8_drop_low.
+                    instance_variable_get("@last_non_dropped").count
+    assert_equal @minus_two_d8_drop_low.
+                  instance_variable_get("@last_non_dropped")[0],
+                  @minus_two_d8_drop_low.
+                  instance_variable_get("@last_result")[1]
   end
 
   def test_to_s
