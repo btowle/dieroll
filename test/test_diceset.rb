@@ -6,8 +6,9 @@ require 'dieroll.rb'
 class TestDiceSet< Test::Unit::TestCase
 
   def setup
-    @one_d6 = Dieroll::DiceSet.new(1,6)
-    @two_d10 = Dieroll::DiceSet.new(2,10)
+    @one_d6 = Dieroll::DiceSet.new(1,6,'+',nil)
+    @two_d10 = Dieroll::DiceSet.new(2,10,'+',nil)
+    @minus_two_d8_drop_low = Dieroll::DiceSet.new(2,8,'-','l')
   end
 
   def teardown
@@ -25,11 +26,16 @@ class TestDiceSet< Test::Unit::TestCase
   def test_roll
     @one_d6.roll!
     @two_d10.roll!
+    @minus_two_d8_drop_low.roll!
 
     assert_equal 1, @one_d6.last_result.count
     assert_equal 2, @two_d10.last_result.count
 
     assert_equal @one_d6.last_total, @one_d6.last_result.inject(0){|sum, element| sum + element}
+
+    assert_equal 2, @minus_two_d8_drop_low.last_result.count
+    assert_equal 1, @minus_two_d8_drop_low.last_non_dropped.count
+    assert_equal @minus_two_d8_drop_low.last_non_dropped[0], @minus_two_d8_drop_low.last_result[1]
   end
 
   def test_to_s

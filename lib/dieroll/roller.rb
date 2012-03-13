@@ -8,11 +8,11 @@ module Dieroll
     end
 
     # Roll arbitrary 'XdY+Z' string
-    def self.string(string)
+    def self.from_string(string)
       rolls = [0]
       sets = s_to_set(string)
       sets.each do |set|
-        if(set.respond_to?(:count) && set.count == 3)
+        if(set.respond_to?(:count) && set.count == 4)
           rolls << roll(set[0].to_i, set[1].to_i)
           rolls[0] += rolls.last.total if set[2] == '+'
           rolls[0] -= rolls.last.total if set[2] == '-'
@@ -32,7 +32,7 @@ module Dieroll
       @mods = []
       @sets.each do |set|
         if(set.respond_to?(:count))
-          @dice_sets << Dieroll::DiceSet.new(set[0].to_i, set[1].to_i, set[2])
+          @dice_sets << Dieroll::DiceSet.new(set[0].to_i, set[1].to_i, set[2], set[3])
         else
           @mods << set
         end
@@ -92,7 +92,8 @@ module Dieroll
         else
           sign = '+'
         end
-
+        
+        set_string, drop_string = set_string.split("/")
         dice_set_string = set_string.match(/^[+|-]?(\d+)d(\d+)/)
         mod_string = set_string.match(/^[+|-]?(\d+)/)
         set = []
@@ -100,6 +101,7 @@ module Dieroll
           set << dice_set_string.captures[0].to_i
           set << dice_set_string.captures[1].to_i
           set << sign
+          set << drop_string
         else
           mod = mod_string.captures[0]
           set = mod.to_i

@@ -14,22 +14,22 @@ class TestRoller < Test::Unit::TestCase
   end
 
   def test_class_roll
-    roll = Dieroll::Roller.string('3d6+10')
+    roll = Dieroll::Roller.from_string('3d6+10')
     assert !roll.empty?
     assert_equal 2, roll.count
     assert_equal roll.first, roll[1].total+10
 
-    roll = Dieroll::Roller.string('1d6+1d4+10')
+    roll = Dieroll::Roller.from_string('1d6+1d4+10')
     assert !roll.empty?
     assert_equal 3, roll.count
     assert_equal roll.first, roll[1].total+roll[2].total+10
 
-    roll = Dieroll::Roller.string('2+2d6+2+2d2+1')
+    roll = Dieroll::Roller.from_string('2+2d6+2+2d2+1')
     assert !roll.empty?
     assert_equal 3, roll.count
     assert_equal roll.first, roll[1].total+roll[2].total+5
 
-    roll = Dieroll::Roller.string('3d6-2d6+10-5')
+    roll = Dieroll::Roller.from_string('3d6-2d6+10-5')
     assert !roll.empty?
     assert_equal 3, roll.count
     assert_equal roll.first, roll[1].total-roll[2].total+5
@@ -37,14 +37,14 @@ class TestRoller < Test::Unit::TestCase
   
   def test_roll_init
     assert_equal '1d6+2', @one_d6_plus_one.string
-    assert_equal [[1,6,'+'],2], @one_d6_plus_one.sets
+    assert_equal [[1,6,'+',nil],2], @one_d6_plus_one.sets
     assert_equal 1, @one_d6_plus_one.dice_sets.count
     assert_equal [2], @one_d6_plus_one.mods
     assert_equal 1, @one_d6_plus_one.dice_sets.count
     assert_equal 1, @one_d6_plus_one.mods.count
 
     assert_equal '1d6+1d4-2', @one_d6_plus_one_d4_minus_two.string
-    assert_equal [[1,6,'+'],[1,4,'+'],-2], @one_d6_plus_one_d4_minus_two.sets
+    assert_equal [[1,6,'+',nil],[1,4,'+',nil],-2], @one_d6_plus_one_d4_minus_two.sets
     assert_equal 2, @one_d6_plus_one_d4_minus_two.dice_sets.count
     assert_equal 1, @one_d6_plus_one.mods.count
   end
@@ -62,7 +62,7 @@ class TestRoller < Test::Unit::TestCase
   def test_string=
     @one_d6_plus_one_d4_minus_two.string = @one_d6_plus_one.string
     assert_equal '1d6+2', @one_d6_plus_one_d4_minus_two.string
-    assert_equal [[1,6,'+'],2], @one_d6_plus_one_d4_minus_two.sets
+    assert_equal [[1,6,'+',nil],2], @one_d6_plus_one_d4_minus_two.sets
     assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
     assert_equal [2], @one_d6_plus_one_d4_minus_two.mods
     assert_equal 1, @one_d6_plus_one_d4_minus_two.dice_sets.count
