@@ -1,13 +1,12 @@
 module Dieroll
   class DiceSet
-    attr_reader :number_of_dice, :sides, :last_result, :last_total, :dice, :sign, :last_non_dropped
+    attr_reader :number_of_dice, :sides, :last_result, :last_total,
+                :dice, :sign, :last_non_dropped
 
     def initialize(number_of_dice, sides, sign='+', drop_string)
-      @number_of_dice = number_of_dice
-      @sides = sides
-      @sign = sign
+      @number_of_dice, @sides, @sign = number_of_dice, sides, sign
       @drop_string = drop_string
-      @drops = @drop_string.scan(/[l|h]/) if !!@drop_string
+      @drops = @drop_string.scan(/[l|h]/)  if !!@drop_string
       @dice = []
       
       @number_of_dice.times do
@@ -28,22 +27,25 @@ module Dieroll
       @last_non_dropped = @last_result.dup
       if !!@drops
         @drops.each do |drop|
-          @last_non_dropped.shift if drop == 'l'
-          @last_non_dropped.pop if drop == 'h'
+          @last_non_dropped.shift  if drop == 'l'
+          @last_non_dropped.pop  if drop == 'h'
         end
       end
+
       @last_total = @last_non_dropped.inject(0){|sum, element| sum + element}
-      @last_total *= -1 if @sign == '-'
+      @last_total *= -1  if @sign == '-'
+
       @last_total
     end
 
     def to_s
       output = "#{@sign}#{@number_of_dice}d#{@sides}"
-      output += "/#{@drop_string}" if !!@drop_string
+      output += "/#{@drop_string}"  if !!@drop_string
       output += ": "
       @dice.each do |die|
         output += die.to_s + " "
       end
+
       output
     end
 

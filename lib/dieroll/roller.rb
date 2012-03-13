@@ -1,4 +1,4 @@
-module Dieroll
+module::Dieroll
   class Roller
     attr_reader :sets, :dice_sets, :mods, :total, :string
 
@@ -13,13 +13,14 @@ module Dieroll
       sets = s_to_set(string)
       sets.each do |set|
         if(set.respond_to?(:count) && set.count == 4)
-          rolls << roll(set[0].to_i, set[1].to_i)
-          rolls[0] += rolls.last.total if set[2] == '+'
-          rolls[0] -= rolls.last.total if set[2] == '-'
+          rolls << roll(set[0], set[1])
+          rolls[0] += rolls.last.total  if set[2] == '+'
+          rolls[0] -= rolls.last.total  if set[2] == '-'
         elsif
           rolls[0] += set
         end
       end
+
       rolls
     end
     
@@ -30,13 +31,15 @@ module Dieroll
       
       @dice_sets = []
       @mods = []
+      @total = 0
+
       @sets.each do |set|
         if(set.respond_to?(:count))
-          @dice_sets << Dieroll::DiceSet.new(set[0].to_i, set[1].to_i, set[2], set[3])
+          @dice_sets << Dieroll::DiceSet.new(set[0], set[1],
+                                              set[2], set[3])
         else
           @mods << set
         end
-        @total = 0
       end
     end
 
@@ -49,6 +52,7 @@ module Dieroll
       @mods.each do |mod|
         @total += mod
       end
+
       @total
     end
 
@@ -60,9 +64,10 @@ module Dieroll
         output += "#{set.to_s}\n"
       end
       @mods.each do |mod|
-        output += "+" if mod >= 0
+        output += "+"  if mod >= 0
         output += "#{mod}\n"
       end
+      
       output
     end
     
@@ -85,30 +90,28 @@ module Dieroll
     def self.s_to_set(str)
       sets = []
       set_strings = str.scan(/^[^+|-]+|[+|-][^+|-]+/)
+      
       set_strings.each do |set_string|
-        match = set_string.match(/[+|-]/)
-        if(!!match)
-          sign = match[0]
-        else
-          sign = '+'
-        end
-        
-        set_string, drop_string = set_string.split("/")
-        dice_set_string = set_string.match(/^[+|-]?(\d+)d(\d+)/)
-        mod_string = set_string.match(/^[+|-]?(\d+)/)
+        set_string =~ /^([^\/]+)\/?([^\/]*)$/
+        set_string, drop_string = $1, $2
+        drop_string = nil  if drop_string.empty?
+
+        set_string =~ /^([+|-]?)(\d+)(d\d+)?/
+        sign, num, sides = $1, $2, $3
+        sides.delete!("d")
+        sign = '+'  if sign.empty?
+
         set = []
-        if(!!dice_set_string)
-          set << dice_set_string.captures[0].to_i
-          set << dice_set_string.captures[1].to_i
-          set << sign
-          set << drop_string
+        if(!!sides)
+          set = [num.to_i, sides.to_i, sign, drop_string]
         else
-          mod = mod_string.captures[0]
-          set = mod.to_i
-          set *= -1 if sign == '-'
+          set = num.to_i
+          set *= -1  if sign == '-'
         end
+
         sets << set
       end
+      
       sets
     end
 
