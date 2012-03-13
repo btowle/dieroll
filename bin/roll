@@ -23,7 +23,7 @@ OptionParser.new do |opts|
 
 end.parse!
 
-dice = Dieroll::Roll.new(ARGV.first)
+dice = Dieroll::Roller.new(ARGV.first)
 
-puts dice.roll
+puts dice.roll!
 puts dice if options[:results]
