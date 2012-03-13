@@ -14,22 +14,22 @@ class TestRoller < Test::Unit::TestCase
   end
 
   def test_class_roll
-    roll = Dieroll::Roller.string('3d6+10')
+    roll = Dieroll::Roller.from_string('3d6+10')
     assert !roll.empty?
     assert_equal 2, roll.count
     assert_equal roll.first, roll[1].total+10
 
-    roll = Dieroll::Roller.string('1d6+1d4+10')
+    roll = Dieroll::Roller.from_string('1d6+1d4+10')
     assert !roll.empty?
     assert_equal 3, roll.count
     assert_equal roll.first, roll[1].total+roll[2].total+10
 
-    roll = Dieroll::Roller.string('2+2d6+2+2d2+1')
+    roll = Dieroll::Roller.from_string('2+2d6+2+2d2+1')
     assert !roll.empty?
     assert_equal 3, roll.count
     assert_equal roll.first, roll[1].total+roll[2].total+5
 
-    roll = Dieroll::Roller.string('3d6-2d6+10-5')
+    roll = Dieroll::Roller.from_string('3d6-2d6+10-5')
     assert !roll.empty?
     assert_equal 3, roll.count
     assert_equal roll.first, roll[1].total-roll[2].total+5

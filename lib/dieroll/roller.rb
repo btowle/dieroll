@@ -8,7 +8,7 @@ module Dieroll
     end
 
     # Roll arbitrary 'XdY+Z' string
-    def self.string(string)
+    def self.from_string(string)
       rolls = [0]
       sets = s_to_set(string)
       sets.each do |set|
