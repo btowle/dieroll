@@ -7,9 +7,11 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'dieroll'
 require 'optparse'
 
+usage_string = "Usage: roll [-r] <roll-string>"
+
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: roll [-r] <roll-string>"
+  opts.banner = usage_string
   
   options[:results] = false
   opts.on('-r','--results','Show full roll results' ) do
@@ -23,7 +25,11 @@ OptionParser.new do |opts|
 
 end.parse!
 
-dice = Dieroll::Roller.new(ARGV.first)
+if(!!ARGV.first)
+  dice = Dieroll::Roller.new(ARGV.first)
+else
+  abort(usage_string)
+end
 
 dice.roll!
 if options[:results]
