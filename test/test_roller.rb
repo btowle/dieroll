@@ -54,9 +54,9 @@ class TestRoller < Test::Unit::TestCase
     assert_equal result, @one_d6_plus_one.instance_variable_get("@total")
   end
   
-  def test_to_s
+  def test_report
     @one_d6_plus_one.roll!
-    assert_match %r{1d6\+1:\n\+1d6: \d+ \n\+\d+}, @one_d6_plus_one.to_s
+    assert_match %r{1d6\+1:\n\+1d6: \d+ \n\+\d+}, @one_d6_plus_one.report
   end
   
   def test_string=

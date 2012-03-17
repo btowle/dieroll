@@ -25,5 +25,9 @@ end.parse!
 
 dice = Dieroll::Roller.new(ARGV.first)
 
-puts dice.roll!
-puts dice if options[:results]
+dice.roll!
+if options[:results]
+  puts dice.report
+else
+  puts dice.total
+end

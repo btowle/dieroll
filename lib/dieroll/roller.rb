@@ -1,6 +1,8 @@
 module::Dieroll
   class Roller
 
+    attr_reader :total
+
     # Roll 1dX
     def self.d(sides)
       rand(1..sides)
@@ -56,8 +58,8 @@ module::Dieroll
     end
 
     # Return roll result as string
-    def to_s
-      output = ""
+    def report
+      output = "#{@total}\n"
       output += "#{@string}:\n"
       @dice_sets.each do |set|
         output += "#{set.to_s}\n"
@@ -70,6 +72,10 @@ module::Dieroll
       output
     end
     
+    def to_s
+      "#{@total}"
+    end
+
     def string=(string)
       @string = string
       initialize(@string)
