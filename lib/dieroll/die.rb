@@ -1,6 +1,5 @@
 module Dieroll
   class Die
-    attr_reader :last_result, :sides
 
     def initialize(sides)
       @sides = sides
@@ -8,7 +7,7 @@ module Dieroll
     end
 
     def roll!
-      @last_result = rand(1..sides)
+      @last_result = rand(1..@sides)
 
       @last_result
     end

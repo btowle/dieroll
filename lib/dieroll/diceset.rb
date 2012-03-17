@@ -1,7 +1,5 @@
 module Dieroll
   class DiceSet
-    attr_reader :number_of_dice, :sides, :last_result, :last_total,
-                :dice, :sign, :last_non_dropped
 
     def initialize(number_of_dice, sides, sign='+', drop_string)
       @number_of_dice, @sides, @sign = number_of_dice, sides, sign
@@ -10,7 +8,7 @@ module Dieroll
       @dice = []
       
       @number_of_dice.times do
-        @dice << Dieroll::Die.new(sides)
+        @dice << Dieroll::Die.new(@sides)
       end
 
       @last_result = []
