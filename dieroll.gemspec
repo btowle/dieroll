@@ -8,5 +8,5 @@ Gem::Specification.new do |s|
   s.description = "Dieroll allows for rolling dice described by 'XdY+Z' strings"
   s.files       = Dir['lib/**/*.rb']
   s.homepage    = 'https://github.com/btowle/dieroll'
-  s.executables = 'roll'
+  s.executables = 'dieroll'
 end
