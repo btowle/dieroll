@@ -1,9 +1,11 @@
 module Dieroll
   class Odds
     attr_reader :combinations_array
+    attr_accessor :offset
 
-    def initialize(combinations_array)
+    def initialize(combinations_array, offset=1)
       @combinations_array = combinations_array
+      @offset = offset
       sum_combinations
       calculate_odds
     end
@@ -18,7 +20,9 @@ module Dieroll
         end
       end
 
-      Odds.new(result_array)
+      offset = @offset + other.offset
+
+      Odds.new(result_array, offset)
     end
 
     def **(number)
@@ -33,34 +37,20 @@ module Dieroll
     end
 
     def +(mod)
-      if(mod < 0)
-        return self.-(-mod)
-      end
+      mod += @offset
 
-      result_array = @combinations_array.dup
-      mod.times do
-        result_array.unshift 0.0
-      end
-
-      Odds.new(result_array)
+      Odds.new(@combinations_array, mod)
     end
 
     def -(mod)
-      if(mod < 0)
-        return self.+(-mod)
-      end
+      mod = @offset - mod
 
-      result_array = @combinations_array.dup
-      mod.times do
-        result_array.shift
-      end
-
-      Odds.new(result_array)
+      Odds.new(@combinations_array, mod)
     end
 
     def equal(result)
-      if(!!@odds_array[result])
-        @odds_array[result]
+      if(!!@odds_array[result-@offset])
+        @odds_array[result-@offset]
       else
         0
       end
@@ -69,7 +59,7 @@ module Dieroll
     def greater_than(result)
       total_chance = 0
       @odds_array.each_with_index do |chance, index|
-        if(index > result)
+        if(index+@offset > result)
           total_chance += chance
         end
       end

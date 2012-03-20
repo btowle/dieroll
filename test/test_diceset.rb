@@ -20,15 +20,18 @@ class TestDiceSet< Test::Unit::TestCase
     assert_equal 1, @one_d6.instance_variable_get("@number_of_dice")
     assert_equal 6, @one_d6.instance_variable_get("@sides")
     assert_equal 1, @one_d6.instance_variable_get("@dice").count
-    assert_equal [0.0, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
+    assert_equal [0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
                     @one_d6.odds.instance_variable_get("@odds_array")
+    assert_equal 1, @one_d6.odds.offset
     assert_equal 2, @two_d10.instance_variable_get("@dice").count
     assert @one_d6.instance_variable_get("@last_result").empty?
     assert_equal nil, @one_d6.instance_variable_get("@last_total")
-    assert_equal [0.0, 0.0, 0.2500, 0.5000, 0.2500],
+    assert_equal [0.2500, 0.5000, 0.2500],
                     @two_d2.odds.instance_variable_get("@odds_array")
-    assert_equal [0.0, 0.0, 0.0, 0.1250, 0.3750, 0.3750, 0.1250],
+    assert_equal 2, @two_d2.odds.offset
+    assert_equal [0.1250, 0.3750, 0.3750, 0.1250],
                     @three_d2.odds.instance_variable_get("@odds_array")
+    assert_equal 3, @three_d2.odds.offset
   end
 
   def test_roll

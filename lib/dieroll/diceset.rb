@@ -16,6 +16,9 @@ module Dieroll
       @last_total = nil
       
       @odds = @dice[0].odds ** @number_of_dice
+      if(@sign == '-')
+        @odds.offset -= @sides+1
+      end
     end
 
     def roll!

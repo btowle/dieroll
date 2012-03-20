@@ -6,7 +6,7 @@ require 'dieroll.rb'
 class TestOdds< Test::Unit::TestCase
 
   def setup
-    @d4 = Dieroll::Odds.new [0,1,1,1,1]
+    @d4 = Dieroll::Odds.new [1,1,1,1]
     @two_d4 = @d4 * @d4
   end
 
@@ -14,10 +14,10 @@ class TestOdds< Test::Unit::TestCase
   end
 
   def test_init
-    assert_equal [0, 1, 1, 1, 1],
+    assert_equal [1, 1, 1, 1],
                   @d4.instance_variable_get("@combinations_array")
     assert_equal 4, @d4.instance_variable_get("@combinations_total")
-    assert_equal [0, 0.25, 0.25, 0.25, 0.25],
+    assert_equal [0.25, 0.25, 0.25, 0.25],
                   @d4.instance_variable_get("@odds_array")
   end
 
@@ -47,28 +47,34 @@ class TestOdds< Test::Unit::TestCase
   end
 
   def test_multiply
-    assert_equal [0.0, 0.0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
+    assert_equal [0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
                   @two_d4.instance_variable_get("@odds_array")
   end
 
   def test_exponentiate
-    assert_equal [0.0, 0.0, 0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
+    assert_equal [0.0625, 0.125, 0.1875, 0.25, 0.1875, 0.125, 0.0625],
                   (@d4**2).instance_variable_get("@odds_array")
   end
 
   def test_add
-    assert_equal [0.0, 0.0, 0.25, 0.25, 0.25, 0.25],
+    assert_equal [0.25, 0.25, 0.25, 0.25],
                   (@d4+1).instance_variable_get("@odds_array")
+    assert_equal 2, (@d4+1).instance_variable_get("@offset")
     assert_equal [0.25, 0.25, 0.25, 0.25],
                   (@d4+(-1)).instance_variable_get("@odds_array")
+    assert_equal 0, (@d4+(-1)).instance_variable_get("@offset")
   end
 
   def test_subtract
     assert_equal [0.25, 0.25, 0.25, 0.25],
                   (@d4-1).instance_variable_get("@odds_array")
-    assert_equal [0.0, 0.0, 0.25, 0.25, 0.25, 0.25],
+    assert_equal 0, (@d4-1).instance_variable_get("@offset")
+    assert_equal [0.25, 0.25, 0.25, 0.25],
                   (@d4-(-1)).instance_variable_get("@odds_array")
-    #need tests and a solution for negative results
+    assert_equal 2, (@d4-(-1)).instance_variable_get("@offset")
+  end
+  
+  def test_table
   end
 
 end

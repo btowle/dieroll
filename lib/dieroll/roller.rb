@@ -50,6 +50,7 @@ module::Dieroll
           @odds *= set.odds
         end
       end
+
       @mods.each do |mod|
         @odds += mod
       end
