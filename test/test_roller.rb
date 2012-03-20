@@ -57,6 +57,8 @@ class TestRoller < Test::Unit::TestCase
                     instance_variable_get("@dice_sets").count
     assert_equal 1, @one_d6_plus_one.
                     instance_variable_get("@mods").count
+    assert_equal [0.0, 0.0, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
+                    @one_d6_plus_one.odds.instance_variable_get("@odds_array")
   end
 
   def test_obj_roll
