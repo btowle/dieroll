@@ -1,9 +1,15 @@
 module Dieroll
   class Die
+    attr_reader :odds
 
     def initialize(sides)
       @sides = sides
       @last_result = nil
+      combinations_array = [0]
+      sides.times do
+        combinations_array << 1
+      end
+      @odds = Dieroll::Odds.new(combinations_array)
     end
 
     def roll!

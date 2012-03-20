@@ -1,6 +1,7 @@
 module Dieroll
   class DiceSet
-
+    attr_reader :odds
+  
     def initialize(number_of_dice, sides, sign='+', drop_string)
       @number_of_dice, @sides, @sign = number_of_dice, sides, sign
       @drop_string = drop_string
@@ -13,6 +14,8 @@ module Dieroll
 
       @last_result = []
       @last_total = nil
+      
+      @odds = @dice[0].odds ** @number_of_dice
     end
 
     def roll!

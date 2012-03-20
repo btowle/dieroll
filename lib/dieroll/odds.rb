@@ -90,7 +90,7 @@ module Dieroll
     end
 
     def to_s
-      @odds_array
+      "#{@odds_array}"
     end
 
     private
@@ -103,7 +103,7 @@ module Dieroll
 
     def calculate_odds
       @odds_array = @combinations_array.map do |combination|
-        combination.to_f / @combinations_total.to_f
+        (combination.to_f / @combinations_total.to_f).round(4)
       end
     end
 

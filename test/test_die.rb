@@ -15,6 +15,9 @@ class TestDie< Test::Unit::TestCase
   def test_init
     assert_equal 6, @d6.instance_variable_get("@sides")
     assert_equal nil, @d6.instance_variable_get("@last_result")
+    assert_equal [0.0, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
+                  @d6.odds.instance_variable_get("@odds_array")
+    assert_equal [0, 1, 1, 1, 1, 1, 1], @d6.odds.combinations_array
   end
 
   def test_roll
