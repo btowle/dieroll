@@ -7,7 +7,7 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'dieroll'
 require 'optparse'
 
-usage_string = "Usage: roll [-r] <roll-string>"
+usage_string = "Usage: roll [-c val] [-ct eq|gt|gte|lt|lte] [-r] <roll-string>"
 
 options = {}
 OptionParser.new do |opts|
@@ -16,6 +16,12 @@ OptionParser.new do |opts|
   options[:results] = false
   opts.on('-r','--results','Show full roll results' ) do
     options[:results] = true
+  end
+
+  opts.on('-e','--equal VAL',
+                'show chances of rolling given value') do |val|
+    options[:equal] = true
+    options[:val] = val.to_i
   end
 
   opts.on('-h','--help','Display this screen') do
@@ -34,6 +40,8 @@ end
 dice.roll!
 if options[:results]
   puts dice.report
+elsif options[:equal]
+  puts dice.odds.equal options[:val]
 else
   puts dice.total
 end
