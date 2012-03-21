@@ -1,7 +1,7 @@
 module::Dieroll
   class Roller
 
-    attr_reader :total
+    attr_reader :total, :odds
 
     # Roll 1dX
     def self.d(sides)
@@ -42,6 +42,19 @@ module::Dieroll
           @mods << set
         end
       end
+
+      @dice_sets.each_with_index do |set, index|
+        if(index == 0)
+          @odds = set.odds
+        else
+          @odds *= set.odds
+        end
+      end
+
+      @mods.each do |mod|
+        @odds += mod
+      end
+
     end
 
     # Determine results of roll

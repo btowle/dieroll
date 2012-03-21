@@ -8,6 +8,9 @@ class TestRoller < Test::Unit::TestCase
   def setup
     @one_d6_plus_one = Dieroll::Roller.new('1d6+1')
     @one_d6_plus_one_d4_minus_two = Dieroll::Roller.new('1d6+1d4-2')
+    @one_d6_minus_one_d4 = Dieroll::Roller.new('1d6-1d4')
+    @one_d6_minus_one_d4_minus_two = Dieroll::Roller.new('1d6-1d4-2')
+    @one_d6_minus_one_d6 = Dieroll::Roller.new('1d6-1d6')
   end
 
   def teardown
@@ -57,6 +60,19 @@ class TestRoller < Test::Unit::TestCase
                     instance_variable_get("@dice_sets").count
     assert_equal 1, @one_d6_plus_one.
                     instance_variable_get("@mods").count
+    assert_equal [0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
+                    @one_d6_plus_one.odds.instance_variable_get("@odds_array")
+    assert_equal 2, @one_d6_plus_one.odds.offset
+    assert_equal [1, 2, 3, 4, 4, 4, 3, 2, 1], @one_d6_plus_one_d4_minus_two.odds.
+                      instance_variable_get("@combinations_array")
+    assert_equal 0, @one_d6_plus_one_d4_minus_two.odds.offset
+    assert_equal [1, 2, 3, 4, 4, 4, 3, 2, 1], @one_d6_minus_one_d4.odds.
+                      instance_variable_get("@combinations_array")
+    assert_equal -3, @one_d6_minus_one_d4.odds.offset
+    assert_equal -5, (@one_d6_minus_one_d4_minus_two).odds.offset
+    assert_equal [1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1], @one_d6_minus_one_d6.odds.
+                  instance_variable_get("@combinations_array")
+    assert_equal -5, @one_d6_minus_one_d6.odds.offset
   end
 
   def test_obj_roll
