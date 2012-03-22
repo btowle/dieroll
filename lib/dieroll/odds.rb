@@ -1,6 +1,6 @@
-module Dieroll
-  class Odds
-    attr_reader :combinations_array
+module Dieroll class Odds
+    attr_reader :combinations_array, :max_result, :variance,
+                :standard_deviation, :mean
     attr_accessor :offset
 
     def initialize(combinations_array, offset=1)
@@ -8,6 +8,7 @@ module Dieroll
       @offset = offset
       sum_combinations
       calculate_odds
+      calculate_statistics
     end
 
     def *(other)
@@ -49,11 +50,15 @@ module Dieroll
     end
 
     def equal(result)
-      if(!!@odds_array[result-@offset])
+      if(result-@offset >= 0 && !!@odds_array[result-@offset])
         @odds_array[result-@offset]
       else
         0
       end
+    end
+    
+    def not_equal(result)
+      1 - equal(result)
     end
 
     def greater_than(result)
@@ -82,6 +87,39 @@ module Dieroll
     def to_s
       "#{@odds_array}"
     end
+    
+    def table(value, comparison_array, header=false)
+      valid_comparisons = [:not_equal, :equal,
+                            :less_than, :less_than_or_equal,
+                            :greater_than_or_equal, :greater_than]
+      if value == :all
+        range = (@offset..@max_result)
+      else
+        if value.kind_of?(Array)
+          range = value
+        else
+          range = [value]
+        end
+      end
+
+      result_lines = []
+      if header
+        result_lines << comparison_array
+        result_lines[0].unshift "result"
+      end
+
+      range.each do |result|
+        result_line = [result]
+        comparison_array.each do |comparison|
+          if valid_comparisons.include?(comparison)
+            result_line << self.send(comparison, result).round(4)
+          end
+        end
+        result_lines << result_line
+      end
+
+      result_lines
+    end
 
     private
 
@@ -93,9 +131,27 @@ module Dieroll
 
     def calculate_odds
       @odds_array = @combinations_array.map do |combination|
-        (combination.to_f / @combinations_total.to_f).round(4)
+        (combination.to_f / @combinations_total.to_f)
       end
     end
+    
+    def calculate_statistics
+      @max_result = @combinations_array.size + @offset - 1
 
+      results_sum = 0
+      (@offset..@max_result).each do |result|
+        results_sum += result  
+      end
+      @mean = results_sum  / @combinations_array.size
+
+      variance_sum = 0
+      (@offset..@max_result).each do |result|
+        variance_sum += (result - @mean)**2 *
+                        @combinations_array[result - @offset]
+      end
+      @variance = (variance_sum.to_f / @combinations_total)
+
+      @standard_deviation = (Math.sqrt @variance)
+    end
   end
 end
