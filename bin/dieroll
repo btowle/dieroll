@@ -7,22 +7,79 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'dieroll'
 require 'optparse'
 
-usage_string = "Usage: roll [-c val] [-ct eq|gt|gte|lt|lte] [-r] <roll-string>"
+usage_string =
+  "Usage: roll [--ne --lt --le --eq --ge --gt] [--headers] [-v val] [-r] <roll-string>"
 
 options = {}
 OptionParser.new do |opts|
   opts.banner = usage_string
   
-  options[:results] = false
-  opts.on('-r','--results','Show full roll results' ) do
+  opts.separator ""
+
+  opts.on('-r','--results','Print full roll results' ) do
     options[:results] = true
   end
 
-  opts.on('-e','--equal VAL',
-                'show chances of rolling given value') do |val|
-    options[:equal] = true
-    options[:val] = val.to_i
+  opts.separator ""
+
+  options[:comparisons] = []
+    
+  opts.separator "Odds -"
+  
+  opts.separator "Print chances of rolling:"
+
+  opts.on('--eq','--equal',
+          'the given value') do
+    options[:comparisons] << :equal
   end
+
+  opts.on('--ne','--not-equal',
+          'any value EXCEPT the given value') do
+    options[:comparisons] << :not_equal
+  end
+
+  opts.on('--lt','--less-than',
+          'less than the given value') do
+    options[:comparisons] << :less_than
+  end
+
+  opts.on('--le','--less-than-or-equal',
+          'less than or equal the given value') do
+    options[:comparisons] << :less_than_or_equal
+  end
+
+  opts.on('--gt','--greater-than',
+          'greater than the given value') do
+    options[:comparisons] << :greater_than
+  end
+
+  opts.on('--ge','--greater-than-or-equal',
+          'greater than or equal the given value') do
+    options[:comparisons] << :greater_than_or_equal
+  end
+
+  opts.separator ""
+
+  opts.on('--headers',
+          'Show headers on the Odds table') do
+    options[:headers] = true
+  end
+
+  opts.separator ""
+  
+  opts.on('-v','--value VALUE',
+          'Sets the value to be used for the Odds switches',
+          'Will display all possible results if not set') do |value|
+    options[:val] = value.to_i
+  end
+
+  opts.separator ""
+
+  opts.on('-p','--probability','Print statistical information for the roll') do
+    options[:probability] = true
+  end
+
+  opts.separator ""
 
   opts.on('-h','--help','Display this screen') do
     puts opts
@@ -37,11 +94,28 @@ else
   abort(usage_string)
 end
 
-dice.roll!
+options.delete(:comparisons)  if options[:comparisons].empty?
+options.delete(:val)  unless options[:comparisons]
+
 if options[:results]
+  dice.roll!
   puts dice.report
-elsif options[:equal]
-  puts dice.odds.equal options[:val]
-else
+end
+
+if options[:probability]
+  #puts probs
+end
+
+if options[:comparisons]
+  options[:val] ||= :all
+  dice.odds.table(options[:val],
+                  options[:comparisons],
+                  options[:headers]).each do |result_line|
+    puts result_line.join("\t")
+  end
+end
+
+if options.empty?
+  dice.roll!
   puts dice.total
 end

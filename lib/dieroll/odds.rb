@@ -50,11 +50,15 @@ module Dieroll class Odds
     end
 
     def equal(result)
-      if(!!@odds_array[result-@offset])
+      if(result-@offset >= 0 && !!@odds_array[result-@offset])
         @odds_array[result-@offset]
       else
         0
       end
+    end
+    
+    def not_equal(result)
+      1 - equal(result)
     end
 
     def greater_than(result)
@@ -83,6 +87,39 @@ module Dieroll class Odds
     def to_s
       "#{@odds_array}"
     end
+    
+    def table(value, comparison_array, header=false)
+      valid_comparisons = [:not_equal, :equal,
+                            :less_than, :less_than_or_equal,
+                            :greater_than_or_equal, :greater_than]
+      if value == :all
+        range = (@offset..@max_result)
+      else
+        if value.kind_of?(Array)
+          range = value
+        else
+          range = [value]
+        end
+      end
+
+      result_lines = []
+      if header
+        result_lines << comparison_array
+        result_lines[0].unshift "result"
+      end
+
+      range.each do |result|
+        result_line = [result]
+        comparison_array.each do |comparison|
+          if valid_comparisons.include?(comparison)
+            result_line << self.send(comparison, result).round(4)
+          end
+        end
+        result_lines << result_line
+      end
+
+      result_lines
+    end
 
     private
 
@@ -94,7 +131,7 @@ module Dieroll class Odds
 
     def calculate_odds
       @odds_array = @combinations_array.map do |combination|
-        (combination.to_f / @combinations_total.to_f).round(4)
+        (combination.to_f / @combinations_total.to_f)
       end
     end
     
