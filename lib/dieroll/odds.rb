@@ -151,7 +151,7 @@ module Dieroll class Odds
       end
       @variance = (variance_sum.to_f / @combinations_total)
 
-      @standard_deviation = (Math.sqrt @variance).round(4)
+      @standard_deviation = (Math.sqrt @variance)
     end
   end
 end

@@ -8,7 +8,8 @@ require 'dieroll'
 require 'optparse'
 
 usage_string =
-  "Usage: roll [--ne --lt --le --eq --ge --gt] [--headers] [-v val] [-r] <roll-string>"
+  "Usage: roll [--ne --lt --le --eq --ge --gt]"+
+  " [--headers] [-v val] [-r] [-p] <roll-string>"
 
 options = {}
 OptionParser.new do |opts|
@@ -100,19 +101,25 @@ options.delete(:val)  unless options[:comparisons]
 if options[:results]
   dice.roll!
   puts dice.report
-end
-
-if options[:probability]
-  #puts probs
+  puts ""
 end
 
 if options[:comparisons]
   options[:val] ||= :all
-  dice.odds.table(options[:val],
+  table = dice.odds.table(options[:val],
                   options[:comparisons],
-                  options[:headers]).each do |result_line|
+                  options[:headers])
+  table.each do |result_line|
     puts result_line.join("\t")
   end
+  puts ""
+end
+
+if options[:probability]
+  puts "Minumum Result:\t\t" + dice.odds.offset.to_s
+  puts "Maximum Result:\t\t" + dice.odds.max_result.to_s
+  puts "Average Result:\t\t" + dice.odds.mean.to_s
+  puts "Standard Deviation:\t" + dice.odds.standard_deviation.round(4).to_s
 end
 
 if options.empty?
