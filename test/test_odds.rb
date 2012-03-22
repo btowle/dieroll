@@ -19,6 +19,10 @@ class TestOdds< Test::Unit::TestCase
     assert_equal 4, @d4.instance_variable_get("@combinations_total")
     assert_equal [0.25, 0.25, 0.25, 0.25],
                   @d4.instance_variable_get("@odds_array")
+    assert_equal 8, @two_d4.instance_variable_get("@max_result")
+    assert_equal 5, @two_d4.instance_variable_get("@mean")
+    assert_equal 2.5, @two_d4.instance_variable_get("@variance")
+    assert_equal 1.5811, @two_d4.instance_variable_get("@standard_deviation")
   end
 
   def test_equal
