@@ -21,7 +21,8 @@ class TestDiceSet< Test::Unit::TestCase
     assert_equal 6, @one_d6.instance_variable_get("@sides")
     assert_equal 1, @one_d6.instance_variable_get("@dice").count
     assert_equal [0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
-                    @one_d6.odds.instance_variable_get("@odds_array")
+                    @one_d6.odds.instance_variable_get("@odds_array").
+                    map{|value| value.round(4)}
     assert_equal 1, @one_d6.odds.offset
     assert_equal 2, @two_d10.instance_variable_get("@dice").count
     assert @one_d6.instance_variable_get("@last_result").empty?

@@ -61,7 +61,9 @@ class TestRoller < Test::Unit::TestCase
     assert_equal 1, @one_d6_plus_one.
                     instance_variable_get("@mods").count
     assert_equal [0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
-                    @one_d6_plus_one.odds.instance_variable_get("@odds_array")
+                    @one_d6_plus_one.odds.
+                    instance_variable_get("@odds_array").
+                    map{|value| value.round(4)}
     assert_equal 2, @one_d6_plus_one.odds.offset
     assert_equal [1, 2, 3, 4, 4, 4, 3, 2, 1], @one_d6_plus_one_d4_minus_two.odds.
                       instance_variable_get("@combinations_array")

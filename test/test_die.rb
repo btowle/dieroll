@@ -16,7 +16,8 @@ class TestDie< Test::Unit::TestCase
     assert_equal 6, @d6.instance_variable_get("@sides")
     assert_equal nil, @d6.instance_variable_get("@last_result")
     assert_equal [0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667],
-                  @d6.odds.instance_variable_get("@odds_array")
+                  @d6.odds.instance_variable_get("@odds_array").
+                  map{|value| value.round(4)}
     assert_equal [1, 1, 1, 1, 1, 1], @d6.odds.combinations_array
     assert_equal 1, @d6.odds.offset
   end
