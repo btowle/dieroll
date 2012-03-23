@@ -1,6 +1,5 @@
 module Dieroll
   class Die
-    attr_reader :odds
 
     def initialize(sides)
       @sides = sides
@@ -8,9 +7,14 @@ module Dieroll
     end
 
     def roll!
-      @last_result = rand(1..@sides)
+      roll(true)
+    end
 
-      @last_result
+    def roll(save=false)
+      result = rand(1..@sides)
+      @last_result = result  if save
+
+      result
     end
 
     def to_s
@@ -35,5 +39,6 @@ module Dieroll
       end
       @odds = Dieroll::Odds.new(combinations_array)
     end
+
   end
 end

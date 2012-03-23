@@ -17,24 +17,36 @@ module Dieroll
     end
 
     def roll!
-      @last_result = []
+      roll(true)
+    end
+
+    def roll(save=false)
+      result = []
       @dice.each do |die|
-        @last_result << die.roll!
+        if save
+          result << die.roll!
+        else
+          result << die.roll
+        end
       end
       
-      @last_result.sort!
-      @last_non_dropped = @last_result.dup
+      result.sort!
+      last_non_dropped = result.dup
       if !!@drops
         @drops.each do |drop|
-          @last_non_dropped.shift  if drop == 'l'
-          @last_non_dropped.pop  if drop == 'h'
+          last_non_dropped.shift  if drop == 'l'
+          last_non_dropped.pop  if drop == 'h'
         end
       end
 
-      @last_total = @last_non_dropped.inject(0){|sum, element| sum + element}
-      @last_total *= -1  if @sign == '-'
+      total = last_non_dropped.inject(0){|sum, element| sum + element}
+      total *= -1  if @sign == '-'
 
-      @last_total
+      @last_result = result  if save
+      @last_non_dropped = last_non_dropped  if save
+      @last_total = total  if save
+
+      total
     end
 
     def to_s

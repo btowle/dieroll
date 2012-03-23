@@ -48,15 +48,25 @@ module::Dieroll
 
     # Determine results of roll
     def roll!
-      @total = 0
+      roll(true)
+    end
+
+    def roll(save=false)
+      total = 0
       @dice_sets.each do |set|
-        @total += set.roll!
+        if save
+          total += set.roll!
+        else
+          total += set.roll
+        end
       end
       @mods.each do |mod|
-        @total += mod
+        total += mod
       end
 
-      @total
+      @total = total  if save
+
+      total
     end
 
     # Return roll result as string
