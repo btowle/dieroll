@@ -1,7 +1,7 @@
 module::Dieroll
   class Roller
 
-    attr_reader :total, :odds
+    attr_reader :total
 
     # Roll 1dX
     def self.d(sides)
@@ -43,17 +43,6 @@ module::Dieroll
         end
       end
 
-      @dice_sets.each_with_index do |set, index|
-        if(index == 0)
-          @odds = set.odds
-        else
-          @odds *= set.odds
-        end
-      end
-
-      @mods.each do |mod|
-        @odds += mod
-      end
 
     end
 
@@ -93,8 +82,31 @@ module::Dieroll
       @string = string
       initialize(@string)
     end
+    
+    def odds
+      @odds = calculate_odds unless !!@odds
+
+      @odds
+    end
+
 
     private
+
+    def calculate_odds
+      @dice_sets.each_with_index do |set, index|
+        if(index == 0)
+          @odds = set.odds
+        else
+          @odds *= set.odds
+        end
+      end
+
+      @mods.each do |mod|
+        @odds += mod
+      end
+
+      @odds
+    end
 
     def self.roll(num, sides)
       total = 0

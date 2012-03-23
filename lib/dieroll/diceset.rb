@@ -1,8 +1,7 @@
 module Dieroll
   class DiceSet
-    attr_reader :odds
   
-    def initialize(number_of_dice, sides, sign='+', drop_string)
+    def initialize(number_of_dice, sides, sign='+', drop_string=nil)
       @number_of_dice, @sides, @sign = number_of_dice, sides, sign
       @drop_string = drop_string
       @drops = @drop_string.scan(/[l|h]/)  if !!@drop_string
@@ -15,10 +14,6 @@ module Dieroll
       @last_result = []
       @last_total = nil
       
-      @odds = @dice[0].odds ** @number_of_dice
-      if(@sign == '-')
-        @odds.offset = @sides * @number_of_dice * -1
-      end
     end
 
     def roll!
@@ -52,6 +47,22 @@ module Dieroll
 
       output
     end
+    
+    def odds
+      @odds = calculate_odds unless !!@odds
 
+      @odds
+    end
+
+    private
+
+    def calculate_odds
+      @odds = @dice[0].odds ** @number_of_dice
+      if(@sign == '-')
+        @odds.offset = @sides * @number_of_dice * -1
+      end
+
+      @odds
+    end
   end
 end
