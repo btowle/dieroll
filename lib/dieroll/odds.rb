@@ -1,7 +1,6 @@
 module Dieroll class Odds
     attr_reader :combinations_array, :max_result, :variance,
-                :standard_deviation, :mean
-    attr_accessor :offset
+                :standard_deviation, :mean, :offset
 
     def initialize(combinations_array, offset=1)
       @combinations_array = combinations_array
@@ -48,6 +47,12 @@ module Dieroll class Odds
 
       Odds.new(@combinations_array, mod)
     end
+    
+    def offset=(offset)
+      @offset = offset
+      calculate_statistics
+    end
+
 
     def equal(result)
       if(result-@offset >= 0 && !!@odds_array[result-@offset])
@@ -95,7 +100,7 @@ module Dieroll class Odds
       if value == :all
         range = (@offset..@max_result)
       else
-        if value.kind_of?(Array)
+        if value.kind_of?(Range)
           range = value
         else
           range = [value]
@@ -142,7 +147,7 @@ module Dieroll class Odds
       (@offset..@max_result).each do |result|
         results_sum += result  
       end
-      @mean = results_sum  / @combinations_array.size
+      @mean = results_sum.to_f  / @combinations_array.size
 
       variance_sum = 0
       (@offset..@max_result).each do |result|

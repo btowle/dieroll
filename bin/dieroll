@@ -70,8 +70,14 @@ OptionParser.new do |opts|
   
   opts.on('-v','--value VALUE',
           'Sets the value to be used for the Odds switches',
+          "Can be an int or a range 'X-Y'",
           'Will display all possible results if not set') do |value|
-    options[:val] = value.to_i
+    value =~ /(-?\d+)-?(-?\d*)/
+    unless($2.empty?)
+      options[:val] = ($1.to_i..$2.to_i)
+    else
+      options[:val] = value.to_i
+    end
   end
 
   opts.separator ""

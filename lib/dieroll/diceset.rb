@@ -17,7 +17,7 @@ module Dieroll
       
       @odds = @dice[0].odds ** @number_of_dice
       if(@sign == '-')
-        @odds.offset -= @sides+1
+        @odds.offset = @sides * @number_of_dice * -1
       end
     end
 
