@@ -129,6 +129,5 @@ if options[:probability]
 end
 
 if options.empty?
-  dice.roll!
-  puts dice.total
+  puts dice.roll
 end

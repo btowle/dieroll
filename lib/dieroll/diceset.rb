@@ -1,8 +1,7 @@
 module Dieroll
   class DiceSet
-    attr_reader :odds
   
-    def initialize(number_of_dice, sides, sign='+', drop_string)
+    def initialize(number_of_dice, sides, sign='+', drop_string=nil)
       @number_of_dice, @sides, @sign = number_of_dice, sides, sign
       @drop_string = drop_string
       @drops = @drop_string.scan(/[l|h]/)  if !!@drop_string
@@ -15,31 +14,39 @@ module Dieroll
       @last_result = []
       @last_total = nil
       
-      @odds = @dice[0].odds ** @number_of_dice
-      if(@sign == '-')
-        @odds.offset = @sides * @number_of_dice * -1
-      end
     end
 
     def roll!
-      @last_result = []
+      roll(true)
+    end
+
+    def roll(save=false)
+      result = []
       @dice.each do |die|
-        @last_result << die.roll!
+        if save
+          result << die.roll!
+        else
+          result << die.roll
+        end
       end
       
-      @last_result.sort!
-      @last_non_dropped = @last_result.dup
+      result.sort!
+      last_non_dropped = result.dup
       if !!@drops
         @drops.each do |drop|
-          @last_non_dropped.shift  if drop == 'l'
-          @last_non_dropped.pop  if drop == 'h'
+          last_non_dropped.shift  if drop == 'l'
+          last_non_dropped.pop  if drop == 'h'
         end
       end
 
-      @last_total = @last_non_dropped.inject(0){|sum, element| sum + element}
-      @last_total *= -1  if @sign == '-'
+      total = last_non_dropped.inject(0){|sum, element| sum + element}
+      total *= -1  if @sign == '-'
 
-      @last_total
+      @last_result = result  if save
+      @last_non_dropped = last_non_dropped  if save
+      @last_total = total  if save
+
+      total
     end
 
     def to_s
@@ -52,6 +59,22 @@ module Dieroll
 
       output
     end
+    
+    def odds
+      @odds = calculate_odds unless !!@odds
 
+      @odds
+    end
+
+    private
+
+    def calculate_odds
+      @odds = @dice[0].odds ** @number_of_dice
+      if(@sign == '-')
+        @odds.offset = @sides * @number_of_dice * -1
+      end
+
+      @odds
+    end
   end
 end
