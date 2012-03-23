@@ -25,7 +25,7 @@ class TestDiceSet< Test::Unit::TestCase
                     map{|value| value.round(4)}
     assert_equal 1, @one_d6.odds.offset
     assert_equal 2, @two_d10.instance_variable_get("@dice").count
-    assert @one_d6.instance_variable_get("@last_result").empty?
+    assert @one_d6.instance_variable_get("@last_results").empty?
     assert_equal nil, @one_d6.instance_variable_get("@last_total")
     assert_equal [0.2500, 0.5000, 0.2500],
                     @two_d2.odds.instance_variable_get("@odds_array")
@@ -40,21 +40,21 @@ class TestDiceSet< Test::Unit::TestCase
     @two_d10.roll!
     @minus_two_d8_drop_low.roll!
 
-    assert_equal 1, @one_d6.instance_variable_get("@last_result").count
-    assert_equal 2, @two_d10.instance_variable_get("@last_result").count
+    assert_equal 1, @one_d6.instance_variable_get("@last_results").count
+    assert_equal 2, @two_d10.instance_variable_get("@last_results").count
 
     assert_equal @one_d6.instance_variable_get("@last_total"),
-                  @one_d6.instance_variable_get("@last_result").
+                  @one_d6.instance_variable_get("@last_results").
                   inject(0){|sum, element| sum + element}
 
     assert_equal 2, @minus_two_d8_drop_low.
-                    instance_variable_get("@last_result").count
+                    instance_variable_get("@last_results").count
     assert_equal 1, @minus_two_d8_drop_low.
                     instance_variable_get("@last_non_dropped").count
     assert_equal @minus_two_d8_drop_low.
                   instance_variable_get("@last_non_dropped")[0],
                   @minus_two_d8_drop_low.
-                  instance_variable_get("@last_result")[1]
+                  instance_variable_get("@last_results")[1]
   end
 
   def test_to_s

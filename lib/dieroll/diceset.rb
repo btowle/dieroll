@@ -1,6 +1,7 @@
 module Dieroll
   class DiceSet
-  
+
+    #Create DiceSet object
     def initialize(number_of_dice, sides, sign='+', drop_string=nil)
       @number_of_dice, @sides, @sign = number_of_dice, sides, sign
       @drop_string = drop_string
@@ -11,27 +12,23 @@ module Dieroll
         @dice << Dieroll::Die.new(@sides)
       end
 
-      @last_result = []
+      @last_results = []
       @last_total = nil
-      
     end
 
-    def roll!
-      roll(true)
-    end
-
+    #Rolls the DiceSet. Returns the result.
     def roll(save=false)
-      result = []
+      results = []
       @dice.each do |die|
         if save
-          result << die.roll!
+          results << die.roll!
         else
-          result << die.roll
+          results << die.roll
         end
       end
       
-      result.sort!
-      last_non_dropped = result.dup
+      results.sort!
+      last_non_dropped = results.dup
       if !!@drops
         @drops.each do |drop|
           last_non_dropped.shift  if drop == 'l'
@@ -42,14 +39,21 @@ module Dieroll
       total = last_non_dropped.inject(0){|sum, element| sum + element}
       total *= -1  if @sign == '-'
 
-      @last_result = result  if save
+      @last_results = results  if save
       @last_non_dropped = last_non_dropped  if save
       @last_total = total  if save
 
       total
     end
 
-    def to_s
+    #Rolls the DiceSet. Returns the result.
+    #Updates @last_total, @last_result, @last_non_dropped
+    def roll!
+      roll(true)
+    end
+
+    #Returns a string with details of the last roll.
+    def report
       output = "#{@sign}#{@number_of_dice}d#{@sides}"
       output += "/#{@drop_string}"  if !!@drop_string
       output += ": "
@@ -59,22 +63,28 @@ module Dieroll
 
       output
     end
-    
+
+    #Returns the Odds for the DiceSet. Creates Odds if it doesn't exist.
     def odds
-      @odds = calculate_odds unless !!@odds
+      calculate_odds unless !!@odds
 
       @odds
     end
 
+    #Returns @last_total as a string.
+    def to_s
+      @last_total.to_s
+    end
+
     private
 
+    #Creates a new Odds object for the DiceSet.
     def calculate_odds
       @odds = @dice[0].odds ** @number_of_dice
       if(@sign == '-')
         @odds.offset = @sides * @number_of_dice * -1
       end
-
-      @odds
     end
+
   end
 end
