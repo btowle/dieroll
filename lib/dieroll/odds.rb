@@ -95,7 +95,7 @@ module Dieroll class Odds
       if value == :all
         range = (@offset..@max_result)
       else
-        if value.kind_of?(Array)
+        if value.kind_of?(Range)
           range = value
         else
           range = [value]
