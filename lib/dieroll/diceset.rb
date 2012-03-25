@@ -117,8 +117,6 @@ module Dieroll
           combinations_array.shift
         end
         @odds = Dieroll::Odds.new(combinations_array, offset)
-        p @odds
-        p @odds.offset
       end
     end
 
