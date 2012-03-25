@@ -80,9 +80,45 @@ module Dieroll
 
     #Creates a new Odds object for the DiceSet.
     def calculate_odds
-      @odds = @dice[0].odds ** @number_of_dice
-      if(@sign == '-')
-        @odds.offset = @sides * @number_of_dice * -1
+      if !@drops
+        @odds = @dice[0].odds ** @number_of_dice
+        if(@sign == '-')
+          @odds.offset = @sides * @number_of_dice * -1
+        end
+      else
+        possibilities = []
+        num_possibilities = @sides ** @number_of_dice
+
+        current_side = 1
+
+        @number_of_dice.times do |dice|
+          possibilities.sort!
+          num_possibilities.times do |possibility|
+            possibilities[possibility] ||= []
+            possibilities[possibility] << current_side
+            current_side += 1
+            current_side = 1  if current_side > @sides
+          end
+        end
+        
+        combinations_array = []
+        possibilities.each do |possibility|
+          possibility.sort!
+          @drops.each do |drop|
+            possibility.shift  if drop == 'l'
+            possibility.pop  if drop == 'h'
+          end
+          total = possibility.inject(0) {|sum, element| sum + element}
+          combinations_array[total] ||= 0
+          combinations_array[total] += 1
+        end
+        offset = @number_of_dice - @drops.size
+        offset.times do
+          combinations_array.shift
+        end
+        @odds = Dieroll::Odds.new(combinations_array, offset)
+        p @odds
+        p @odds.offset
       end
     end
 
