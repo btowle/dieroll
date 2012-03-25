@@ -8,7 +8,7 @@ module::Dieroll
       rand(1..sides)
     end
 
-    # Roll arbitrary 'XdY+Z' string
+    # Roll arbitrary dice notation string
     def self.from_string(string)
       rolls = [0]
       sets = s_to_set(string)
@@ -24,7 +24,7 @@ module::Dieroll
 
       rolls
     end
-    
+
     # Create roller object
     def initialize(string)
       @string = string
@@ -42,15 +42,16 @@ module::Dieroll
           @mods << set
         end
       end
-
-
     end
 
-    # Determine results of roll
-    def roll!
-      roll(true)
+    # Updates the object to use a new dice notation string
+    def string=(string)
+      @string = string
+      @odds = nil
+      initialize(@string)
     end
 
+    # Rolls the Roller. Returns the total.
     def roll(save=false)
       total = 0
       @dice_sets.each do |set|
@@ -69,39 +70,41 @@ module::Dieroll
       total
     end
 
+    # Rolls the Roller. Returns the total. Sets @total.
+    def roll!
+      roll(true)
+    end
+
     # Return roll result as string
     def report
-      output = "#{@total}\n"
-      output += "#{@string}:\n"
+      output = @total.to_s + "\n"
+      output += @string.to_s + ":\n"
       @dice_sets.each do |set|
-        output += "#{set.to_s}\n"
+        output += set.report + "\n"
       end
       @mods.each do |mod|
         output += "+"  if mod >= 0
-        output += "#{mod}\n"
+        output += mod.to_s + "\n"
       end
       
       output
     end
-    
-    def to_s
-      "#{@total}"
-    end
 
-    def string=(string)
-      @string = string
-      initialize(@string)
-    end
-    
+    # Returns @odds. Creates an Odds object if !@odds.
     def odds
-      @odds = calculate_odds unless !!@odds
+      calculate_odds unless !!@odds
 
       @odds
     end
 
+    # Returns @total as a string
+    def to_s
+      @total.to_s
+    end
 
     private
 
+    # Creates the the Odds object for the roller.
     def calculate_odds
       @dice_sets.each_with_index do |set, index|
         if(index == 0)
@@ -114,8 +117,6 @@ module::Dieroll
       @mods.each do |mod|
         @odds += mod
       end
-
-      @odds
     end
 
     def self.roll(num, sides)
@@ -126,7 +127,8 @@ module::Dieroll
       end
       Dieroll::Result.new(sides, dice)
     end
-    
+
+    # Parse str and return an array to create DiceSets.
     def self.s_to_set(str)
       sets = []
       set_strings = str.scan(/^[^+|-]+|[+|-][^+|-]+/)

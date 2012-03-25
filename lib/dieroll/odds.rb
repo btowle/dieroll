@@ -144,10 +144,12 @@ module Dieroll class Odds
       @max_result = @combinations_array.size + @offset - 1
 
       results_sum = 0
+      total_results = 0
       (@offset..@max_result).each do |result|
-        results_sum += result  
+        results_sum += @combinations_array[result-@offset] * result
+        total_results += @combinations_array[result-@offset]
       end
-      @mean = results_sum.to_f  / @combinations_array.size
+      @mean = results_sum.to_f  / total_results
 
       variance_sum = 0
       (@offset..@max_result).each do |result|
