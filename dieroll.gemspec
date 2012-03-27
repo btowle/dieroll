@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'dieroll'
-  s.version     = '1.0.0'
+  s.version     = '1.1.0'
   s.author      = "Brian Towle"
   s.platform    = Gem::Platform::RUBY
   s.date        = '2012-03-25'
