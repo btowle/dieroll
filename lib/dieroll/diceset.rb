@@ -1,5 +1,6 @@
 module Dieroll
   class DiceSet
+    attr_reader :last_results
 
     #Create DiceSet object
     def initialize(number_of_dice, sides, sign='+', drop_string=nil)

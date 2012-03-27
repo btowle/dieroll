@@ -76,17 +76,29 @@ module::Dieroll
     end
 
     # Return roll result as string
-    def report
-      output = @total.to_s + "\n"
-      output += @string.to_s + ":\n"
-      @dice_sets.each do |set|
-        output += set.report + "\n"
+    def report(formatted=true)
+      if(formatted)
+        output = @total.to_s + "\n"
+        output += @string.to_s + ":\n"
+        @dice_sets.each do |set|
+          output += set.report + "\n"
+        end
+        @mods.each do |mod|
+          output += "+"  if mod >= 0
+          output += mod.to_s + "\n"
+        end
+      else
+        set_reports = []
+        @dice_sets.each do |set|
+          set_reports << set.report
+        end
+        output = {
+                :total => @total,
+                :string => @string,
+                :sets => set_reports,
+                :mods => @mods}
       end
-      @mods.each do |mod|
-        output += "+"  if mod >= 0
-        output += mod.to_s + "\n"
-      end
-      
+
       output
     end
 
